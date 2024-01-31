@@ -1,15 +1,14 @@
-import 'discord.js';
-import { SlashCommandBuilder } from 'discord.js';
+/// <reference types="discord.js" />
+
+import * as Discord from 'discord.js';
 
 declare module "discord.js" {
     export interface Command {
-        data: SlashCommandBuilder;
-        execute: (interaction: CommandInteraction) => Promise<void>;
+        data: Discord.SlashCommandBuilder;
+        execute: (interaction: Discord.CommandInteraction) => Promise<void>;
     }
 
-    export interface Client extends Discord.Client {
-        commands: Collection<string, Command>;
-        aliases: Collection<string, Command>;
+    export interface Client {
+        commands: Discord.Collection<string, Command>;
     }
-
 }

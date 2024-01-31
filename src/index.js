@@ -60,6 +60,29 @@ client.once(Events.ClientReady, readyClient => {
 	console.log(`Logged in as ${readyClient.user.tag}`);
 });
 
+/* DB init and start the bot */
 DB.init(() => {
     client.login(process.env.DISCORD_BOT_TOKEN);
 });
+
+/* The following is to make sure db saves before exiting */
+
+/* Windows pick up sigint */
+if (process.platform === 'win32') {
+    var rl = require('readline').createInterface({
+      input: process.stdin,
+      output: process.stdout
+    });
+  
+    rl.on('SIGINT', function () {
+      process.kill(process.pid, 'SIGINT');
+    });
+}
+  
+const exit = async () => {
+    DB.close();
+    process.exit();
+};
+
+process.once('SIGINT', exit);
+process.once('SIGTERM', exit);

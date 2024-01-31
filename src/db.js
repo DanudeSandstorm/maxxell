@@ -41,19 +41,22 @@ class DB {
         this.db.close();
     };
 
-    addUser = (discord_id, roblox_name) => {
-        const user = this.collection.findOne({ discord_id });
+    /**
+     * @returns {{discord_id: string, roblox_name: string, $loki: number}}
+     */
+    getUser = (discord_id) => {
+        return this.collection.findOne({ discord_id });
+    };
 
-        if (!user) {
-            this.collection.insert({
-                discord_id,
-                roblox_name
-            });
-        }
+    addUser = (discord_id, roblox_name) => {
+        this.collection.insert({
+            discord_id,
+            roblox_name
+        });
     };
 
     updateUser = (discord_id, roblox_name) => {
-        const user = this.collection.findOne({ discord_id });
+        const user = this.getUser(discord_id);
 
         if (!user) {
             this.addUser(discord_id, roblox_name);
@@ -65,10 +68,16 @@ class DB {
         });
     };
 
+    /**
+     * @returns {Array<{discord_id: string, roblox_name: string, $loki: number}>}
+     */
     getUsers = () => {
         return this.collection.chain().simplesort("roblox_name").data();
     };
 
+    removeUsers = (discord_ids) => {
+        this.collection.findAndRemove({ discord_id: { $in: discord_ids } });
+    };
 }
 
 module.exports = new DB();

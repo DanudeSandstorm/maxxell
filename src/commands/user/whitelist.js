@@ -1,28 +1,34 @@
 const { SlashCommandBuilder } = require("discord.js");
+const DB = require('../../db.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('whitelist')
-        .setDescription('Add yourself to whitelist')
-        .addStringOption(option => option.setName('name').setDescription('Roblox username').setRequired(true)),
+        .setDescription('Add Roblox account to whitelist')
+        .addStringOption(option => option.setName('name').setDescription('Roblox username').setRequired(true))
+        .setDefaultMemberPermissions(0),
     /**
      * @param {import('discord.js').ChatInputCommandInteraction} interaction
      */
     async execute(interaction) {
+        if (interaction.channel.id !== '1184949523177553982') {
+            return interaction.reply({ content: 'This command can not be used in this channel', ephemeral: true });
+        }
+
         const user = interaction.user;
         const roblox_name = interaction.options.getString('name');
-        // const whitelist = interaction.client.settings.get(interaction.guildId, 'whitelist', []);
-        // if (whitelist.includes(user.id)) {
-        //     return interaction.reply({
-        //         content: `${user.tag} is already whitelisted`,
-        //         ephemeral: true
-        //     });
-        // }
-        // whitelist.push(user.id);
-        // interaction.client.settings.set(interaction.guildId, 'whitelist', whitelist);
+
+        if (DB.getUser(user.id)) {
+            return interaction.reply({
+                content: `You are already whitelisted`,
+                ephemeral: true
+            });
+        }
+
+        DB.addUser(user.id, roblox_name);
+
         return interaction.reply({
-            content: `${user.username} has been whitelisted`,
-            ephemeral: true
+            content: `${roblox_name}`,
         });
     }
-}
+};

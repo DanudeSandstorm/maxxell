@@ -8,6 +8,6 @@
 		"ecmaVersion": 2022
 	},
 	"rules": {
-
+		"semi": 2
 	}
 }

@@ -3,6 +3,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 require('dotenv').config();
 
+const DB = require('./db');
+
 if (!process.env.DISCORD_BOT_TOKEN) {
     throw new Error('No token provided');
 }
@@ -58,4 +60,6 @@ client.once(Events.ClientReady, readyClient => {
 	console.log(`Logged in as ${readyClient.user.tag}`);
 });
 
-client.login(process.env.DISCORD_BOT_TOKEN);
+DB.init(() => {
+    client.login(process.env.DISCORD_BOT_TOKEN);
+});

@@ -8,9 +8,13 @@
         "start": "node src/index.js",
         "register": "node src/deploy-commands.js"
     },
+    "devDependencies": {
+        "@types/lokijs": "^1.5.14",
+        "eslint": "^8.56.0"
+    },
     "dependencies": {
         "discord.js": "^14.14.1",
         "dotenv": "^16.4.1",
-        "eslint": "^8.56.0"
+        "lokijs": "^1.5.12"
     }
 }

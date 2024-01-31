@@ -1,0 +1,16 @@
+{
+    "name": "whitelist-bot",
+    "version": "1.0.0",
+    "main": "src/index.js",
+    "author": "Daniel Santoro <dds2130@rit.edu>",
+    "license": "Apache-2.0",
+    "scripts": {
+        "start": "node src/index.js",
+        "register": "node src/deploy-commands.js"
+    },
+    "dependencies": {
+        "discord.js": "^14.14.1",
+        "dotenv": "^16.4.1",
+        "eslint": "^8.56.0"
+    }
+}

@@ -11,7 +11,14 @@ if (!fs.existsSync(db_folder)) {
 }
 
 class DB {
-    constructor() {}
+    static instance = null;
+
+    constructor() {
+        if (DB.instance) {
+            return DB.instance;
+        }
+        DB.instance = this;
+    }
 
     init = (callback) => {
         this.db = new loki(path.resolve(db_folder, 'users.db'), {
@@ -24,10 +31,14 @@ class DB {
                     entries = this.db.addCollection('users', { indices: ['discord_id'] });
                 }
                 this.collection = entries;
-                console.log('test');
+                console.log('Database loaded');
                 callback();                
             }
         });
+    };
+
+    close = () => {
+        this.db.close();
     };
 
     addUser = (discord_id, roblox_name) => {

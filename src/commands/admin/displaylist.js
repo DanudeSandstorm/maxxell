@@ -1,4 +1,5 @@
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder, Collection } = require("discord.js");
+const chunkArray = require("../../utils/chunkArray");
 const DB = require("../../db");
 
 const booster_role = "1076643576303341620";
@@ -15,10 +16,16 @@ module.exports = {
         await interaction.deferReply();
 
         const users = DB.getUsers();
-        const ids = users.map(user => user.discord_id);
+        const user_ids = users.map(user => user.discord_id);
 
-        /** @type {import('discord.js').Collection<string, import('discord.js').GuildMember>} */
-        const members = await interaction.guild.members.fetch({ user: ids });
+        /** @type {Collection<string, import('discord.js').GuildMember>} */
+        const members = new Collection();
+
+        const chunks = chunkArray(user_ids, 100);
+        for (const ids of chunks) {
+            const fetched = await interaction.guild.members.fetch({ user: ids });
+            members.concat(fetched);
+        }
 
         let excluded = [];
         const boosters = users.filter(({ discord_id }) => {
@@ -48,14 +55,9 @@ module.exports = {
             });
         }
 
-
-        await interaction.followUp({
+        return interaction.followUp({
             content: 'Sent whitelist',
             ephemeral: true
         });
-
-        DB.removeUsers(excluded);
-
-        return Promise.resolve();
     }
 };

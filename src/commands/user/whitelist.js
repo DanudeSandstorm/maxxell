@@ -11,10 +11,6 @@ module.exports = {
      * @param {import('discord.js').ChatInputCommandInteraction} interaction
      */
     async execute(interaction) {
-        if (interaction.channel.id !== '1184949523177553982') {
-            return interaction.reply({ content: 'This command can not be used in this channel', ephemeral: true });
-        }
-
         const user = interaction.user;
         const roblox_name = interaction.options.getString('name');
 

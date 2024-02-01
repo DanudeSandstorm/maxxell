@@ -12,10 +12,6 @@ module.exports = {
      * @param {import('discord.js').ChatInputCommandInteraction} interaction
      */
     async execute(interaction) {
-        if (!['1069012828159221812', '1184949523177553982'].includes(interaction.channel.id)) {
-            return interaction.reply({ content: 'This command can not be used in this channel', ephemeral: true });
-        }
-
         await interaction.deferReply();
 
         const users = DB.getUsers();

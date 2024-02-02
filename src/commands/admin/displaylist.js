@@ -24,7 +24,9 @@ module.exports = {
         const chunks = chunkArray(user_ids, 100);
         for (const ids of chunks) {
             const fetched = await interaction.guild.members.fetch({ user: ids });
-            members.concat(fetched);
+            for (const [key, val] of fetched) {
+                members.set(key, val);
+            }
         }
 
         let excluded = [];
